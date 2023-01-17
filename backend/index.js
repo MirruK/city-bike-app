@@ -2,7 +2,26 @@ const express = require('express')
 
 const PORT = process.env.PORT || 3001
 
+const postgresConnect = async() => {
+    console.log("connecting to postgresql db")
+}
+
+// let retries = 5
+// while (retries) {
+//     try {
+//         await postgresConnect()
+//         break
+//     } catch (error) {
+//         console.log(error)
+//         retries -= 1
+//         console.log("Retries left: ", retries)
+//         //wait
+//         await new Promise(res => setTimeout(res, 3000))
+//     }
+// }
+
 const app = express()
+
 
 // Use logging middleware for errors
 // use morgan for pretty logging of requests
