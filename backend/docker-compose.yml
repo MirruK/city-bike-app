@@ -7,6 +7,9 @@ services:
       POSTGRES_DB: city-bike-app
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+      - ./create_tables.sql:/create_tables.sql
+      - ./../dataset/Helsingin_ja_Espoon_kaupunkipyöräasemat_avoin.csv:/Stationdata.csv
+      - ./../dataset/2021-05.csv:/Journeydata.csv
     ports:
       - '5432:5432'
   web:
