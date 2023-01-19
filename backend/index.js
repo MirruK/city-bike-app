@@ -4,12 +4,6 @@ const { Pool, Client } = require('pg')
 
 const PORT = process.env.PORT || 3001
 
-const getQueryString = (param) => {
-    const queries = {
-        "station/id" : `SELECT * FROM stations WHERE id==${param}`,
-        
-    }
-}
 const client = new Client({
     host: "db",
     port: 5432,
@@ -58,34 +52,87 @@ app.get('/', (req, res)=>{
     res.status(200)
     res.send("Hi there")
 })
-app.get('/addtable', async(req,res)=>{
-    console.log("adding table and dummy data")
-    dbres = await client.query(`CREATE TABLE IF NOT EXISTS "test-data" (
-        "id" SERIAL,
-        "data1" VARCHAR(50),
-        "data2" VARCHAR(50),
-        PRIMARY KEY ("id"));`
-    )
-    res.send(`${dbres}`).end()
-})
 
 // Get info about specific journey by id
 //app.get('api/journies/:id')
 
 
 // Get info about all stations (preload these)
-//app.get('api/stations/')
+app.get('/api/stations', (req, res)=>{
+    console.log("Hit stations endpoint")
+    const queryRes = client.query("SELECT * FROM stations")
+    queryRes.then((val)=>{
+        res.status(200)
+        res.json(val.rows).end()
+        return;
+    }).catch((err)=>res.status(404).end())
+})
 
 // Get info about a station by id
-//app.get('api/stations/:id')
-/*returns {name, 
-           address, 
-           total journies started, 
-           total journies ended}
-*/
+app.get('/api/stations/:id', (req, res)=>{
+    console.log("Hit stations/id endpoint")
+    const queryRes = client.query(`SELECT * FROM stations WHERE id=${req.params.id}`)
+    queryRes.then((val)=>{
+        res.status(200)
+        res.json(val.rows).end()
+        return;
+    }).catch((err)=>res.status(404).end())
+})
 
-// Get all journies for specific station
-//app.get('api/stations/:id/journies')
+app.get('/api/stations/:name', (req, res)=>{
+    console.log("Hit stations/id endpoint")
+    const queryRes = client.query(
+        `SELECT * FROM stations 
+        WHERE Nimi=${req.params.name} 
+        OR Namn=${req.params.name} 
+        OR Name=${req.params.name}`
+    )
+    queryRes.then((val)=>{
+        res.status(200)
+        res.json(val.rows).end()
+        return;
+    }).catch((err)=>res.status(404).end())
+})
+
+// Get all journies for specific station id
+app.get('/api/stations/:id/journeys', (req,res)=>{
+    //type(default both): departing, returning
+    //order(default descending)
+    //sortBy(default latest): latest, oldest, length (ride length), time (ride time)
+    const getTypeQuery = () => {
+        return {
+            "departing" : `WHERE Departure_station_id=${req.params.id}`,
+            "returning" : `WHERE Return_station_id=${req.params.id}`,
+        }
+    }
+    const getSortQuery = (type,order) => {
+        //only valid values for query order is asc or desc
+        if(order !== "asc") order = "DESC";
+        else order = "ASC";
+        if (type === "departing") type = "Departure";
+        else type = "Return";
+        return {
+            "latest" : `ORDER BY ${type} ${order}`,
+            "oldest" : `ORDER BY ${type} ${order}`,
+            "length" : `ORDER BY Covered_distance_m ${order}`,
+            "time" : `ORDER BY Duration_sec ${order}`,
+        }
+    }
+    console.log("Test getsortquery:", getSortQuery(req.query.rideType, "length"))
+    const type = getTypeQuery(req.params.id)[req.query.rideType || "Departure"];
+    const sortBy = getSortQuery(req.query.rideType,req.query.order)[req.query.sortBy || "latest"];
+    console.log("Hit journies by station id endpoint")
+    const queryRes = client.query(`SELECT * FROM journeys ${type} ${sortBy} LIMIT 50`)
+    queryRes
+        .then((val)=>{
+        res.status(200)
+        res.json(val.rows).end()
+        return;
+        })
+        .catch((err)=>{
+            console.log("Failed to get data from database")
+            res.status(404).end()})
+})
 
 // add a new journey 
 // database gives id & validate format of data

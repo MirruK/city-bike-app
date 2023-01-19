@@ -37,3 +37,6 @@ COPY journeys (Departure, Return, Departure_station_id, Departure_station_name,R
 FROM '/Journeydata.csv'
 DELIMITER ','
 CSV HEADER;
+
+DELETE FROM journeys WHERE Covered_distance_m < 10 OR Duration_sec < 10;
+
