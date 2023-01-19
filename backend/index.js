@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors');
 const { Pool, Client } = require('pg')
 
 
@@ -40,6 +41,9 @@ const client = new Client({
 //
 // retryConnection()
 const app = express()
+
+app.use(cors())
+
 client.connect((err)=>{
     if(err) console.error('connection error', err.stack)
     else console.log("connected")
