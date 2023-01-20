@@ -1,10 +1,20 @@
-const StationList = ({stations, searchInput}) => {
+import StationDetails from './StationDetails'
+
+const StationList = ({stations, searchInput, setSelectedStation}) => {
+    const bindJourney = (boundStation) => {
+        return ()=>{
+            const station = boundStation
+            setSelectedStation(station);
+            console.log("Selected station has been set to ", station)
+        }
+    }
     const limitListings = () => {
         const results = Object.values(stations).filter((val)=>
                 val.nimi.includes(searchInput))
-        if (results.length > 10){
+        if (results.length > 20){
             return (<p>Please specify your search</p>)
         }
+        else if (searchInput !== "" && results.length <= 0){return (<p>No stations found.</p>)}
         else{
                 return (
         <div>
@@ -12,10 +22,8 @@ const StationList = ({stations, searchInput}) => {
             {results.map((val)=>{ 
                 return(
                     <div>
-                    <li>{val.nimi}<br/>
-                    {val.osoite}<br/>
-                    {val.operaattor}
-                    </li><br/>
+                    <StationDetails extended={false} station={val}/>
+                    <button onClick={bindJourney(val)}>Select</button>
                     </div>
                     )
                 }

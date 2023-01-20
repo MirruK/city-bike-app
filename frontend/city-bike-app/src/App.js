@@ -1,19 +1,21 @@
 import './App.css';
-import SearchField from './components/SearchForm';
-import StationList from './components/StationList';
+import SearchField from './components/SearchForm'
+import StationList from './components/StationList'
+import JourneyList from './components/JourneyList'
+import SearchBar from './components/SearchBar'
+import requests from './serverRequest'
 import {useState, useEffect} from 'react';
-import axios from 'axios';
-
-const baseURL = 'http://localhost:3001/api'
+import StationDetails from './components/StationDetails';
 
 const App = () => {
     const [stations, setStations] = useState({}) 
+    const [selectedStation, setSelectedStation] = useState({})
     const [searchInput, setSearchInput] = useState("")
+    const [displayedJourneys, setDisplayedJourneys] = useState([])
     useEffect(()=>{ 
     const initStations = async() => {
-        const data = await axios.get(`${baseURL}/stations`)
+        const data = await requests.getStations()
         if (data.status === 200){
-            console.log(data.data)
             setStations(data.data)
             console.log("Stations initialized successfully")
             return 1
@@ -25,12 +27,22 @@ const App = () => {
     }
         initStations()
     },[])
-
-    if (stations !== {}){
+    
+    if (Object.keys(selectedStation).length > 0){
         return(
-            <div>
-                <SearchField searchInput={searchInput} setSearchInput={setSearchInput}/>
-                <StationList stations={stations} searchInput={searchInput}/>
+            <div className='center-container'>
+            <button onClick={()=>{setSearchInput(""); setDisplayedJourneys([]); setSelectedStation({})}}>Back</button>
+            <SearchField setSearchInput={setSearchInput} selectedStation={selectedStation} setDisplayedJourneys={setDisplayedJourneys}/>
+            <StationDetails extended={true} station={selectedStation}/>
+            <JourneyList journeys={displayedJourneys} />
+            </div>
+        )
+    }
+    else if (stations !== {}){
+        return(
+            <div className='center-container'>
+                <SearchBar setSearchInput={setSearchInput} />
+                <StationList stations={stations} searchInput={searchInput} setSelectedStation={setSelectedStation}/>
             </div>
         )
     }
@@ -38,7 +50,7 @@ const App = () => {
 
     else{
     return(
-        <div>
+        <div className='app-container'>
             <SearchField/>
             Loading stations...
         </div>
