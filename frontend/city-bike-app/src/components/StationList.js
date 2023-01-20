@@ -6,25 +6,26 @@ const StationList = ({stations, searchInput}) => {
             return (<p>Please specify your search</p>)
         }
         else{
-            results.map((val)=>{
                 return (
+        <div>
+            <ul>
+            {results.map((val)=>{ 
+                return(
                     <div>
                     <li>{val.nimi}<br/>
                     {val.osoite}<br/>
                     {val.operaattor}
                     </li><br/>
                     </div>
-                )
-            })
+                    )
+                }
+            )}
+            </ul>
+        </div>  
+            )
         }
     }
-    return (
-        <div>
-            <ul>
-            {limitListings()}
-            </ul>
-        </div>
-    )
+    return limitListings()
 }
 
 export default StationList
