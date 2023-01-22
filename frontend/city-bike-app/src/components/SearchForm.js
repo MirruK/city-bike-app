@@ -1,17 +1,28 @@
 import requests from '../serverRequest'
+import {useState, useEffect} from 'react'
 import '../App.css'
 
-const SearchForm = ({selectedStation, searchInput, setDisplayedJourneys}) => {
+const SearchForm = ({selectedStation, currentPage, setDisplayedJourneys}) => {
+    const [lastQuery, setLastQuery] = useState({})
+    const getNextPage = async() => {
+        if (lastQuery === {}) return;
+        const queries = {...lastQuery, page : currentPage}
+        console.log("New Query with page: ", queries)
+        const journeys = await requests.getFilteredJourneys(selectedStation, queries)
+        if (journeys.status === 200) setDisplayedJourneys(journeys.data) 
+        else console.log("Getting journeys failed with code: ", journeys.status)
+        
+    }
+    useEffect(()=>{getNextPage()},[currentPage])
     const formSubmit = async(event) => {
         event.preventDefault()
-        console.log(event)
-        console.log("event sortby value: ", event.currentTarget.elements.sortBy.value)
         const queries = {
             sortBy : event.currentTarget.elements.sortBy.value,
             order : event.currentTarget.elements.order.value,
             rideType : event.currentTarget.elements.rideType.value,
             id : selectedStation.id
         }
+        setLastQuery(queries)
         const journeys = await requests.getFilteredJourneys(selectedStation, queries)
         console.log("journeys res:", journeys)
         if (journeys.status === 200) setDisplayedJourneys(journeys.data) 

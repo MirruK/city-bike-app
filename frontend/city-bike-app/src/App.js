@@ -1,17 +1,18 @@
 import './App.css';
-import SearchField from './components/SearchForm'
+import SearchForm from './components/SearchForm'
 import StationList from './components/StationList'
 import JourneyList from './components/JourneyList'
 import SearchBar from './components/SearchBar'
+import StationDetails from './components/StationDetails';
 import requests from './serverRequest'
 import {useState, useEffect} from 'react';
-import StationDetails from './components/StationDetails';
 
 const App = () => {
     const [stations, setStations] = useState({}) 
     const [selectedStation, setSelectedStation] = useState({})
     const [searchInput, setSearchInput] = useState("")
     const [displayedJourneys, setDisplayedJourneys] = useState([])
+    const [currentPage, setCurrentPage] = useState(0)
     useEffect(()=>{ 
     const initStations = async() => {
         const data = await requests.getStations()
@@ -27,14 +28,14 @@ const App = () => {
     }
         initStations()
     },[])
-    
     if (Object.keys(selectedStation).length > 0){
         return(
             <div className='center-container'>
-            <button onClick={()=>{setSearchInput(""); setDisplayedJourneys([]); setSelectedStation({})}}>Back</button>
-            <SearchField setSearchInput={setSearchInput} selectedStation={selectedStation} setDisplayedJourneys={setDisplayedJourneys}/>
+            <button onClick={()=>{setSearchInput(""); setDisplayedJourneys([]); setSelectedStation({}); setCurrentPage(0)}}>Back</button>
+            <SearchForm currentPage={currentPage} selectedStation={selectedStation} setDisplayedJourneys={setDisplayedJourneys}/>
             <StationDetails extended={true} station={selectedStation}/>
             <JourneyList journeys={displayedJourneys} />
+            <button onClick={()=>setCurrentPage(currentPage+1)}>Next Page</button>
             </div>
         )
     }
@@ -46,12 +47,9 @@ const App = () => {
             </div>
         )
     }
-    
-
     else{
     return(
         <div className='app-container'>
-            <SearchField/>
             Loading stations...
         </div>
     )
