@@ -1,8 +1,8 @@
 # README
 
-This is a fullstack application that shows information about city bikes in the Helsinki city-area.
+This is a fullstack application that shows information about city-bike stations and journeys in Helsinki.
 
-The project idea was made by Solita as their dev academy pre-assignment.
+This project is for the Solita dev academy pre-assignment.
 
 ## Build steps:
 ### DEPENDENCIES: 
@@ -25,11 +25,10 @@ After the files are correctly placed in the dataset directory, proceed to step 2
 3. run command: `chmod +x dockerdbinit.sh && ./dockerdbinit.sh`
 <br><br>**ON WINDOWS:**
 4. run command: `docker-compose up -d`
-<br>4.1. run command: `docker exec backend-db-1 psql -U postgres -d` "city-bike-app" -a -f /create_tables.sql
+<br>4.1. run command: `docker exec backend-db-1 psql -U postgres -d "city-bike-app" -a -f /create_tables.sql`
 <br>The database should now be populated with data and running along with the backend server
 
-REMOVE THESE BY BUILDING REACT
-Continuing to the frontend...
+If you want to run the frontend in development mode:
 <br>5. run command: `cd ../frontend/city-bike-app`
 <br>6. run command: `npm install`
 <br>7. run command: `npm start`
@@ -37,7 +36,7 @@ Continuing to the frontend...
 **Congratulations!** The application should now be running on localhost:3000/
     
 The backend will be available on localhost:3001, offering multiple api endpoints.
-Technically, the postgresql database is also exposed on the port 5432,
+The postgresql database is also exposed on the port 5432,
 in case you want to check it out through a database interface.
 
 __Application setup has been tested on:__
@@ -46,6 +45,6 @@ __Application setup has been tested on:__
 - Windows 10 on an AMD CPU 64-bit running docker with WSL
 
 **When you want to shut down the app properly**:
-<br>Run the command: `docker-compose down`, while in the  city-bike-app/backend directory
+<br>Run the command: `docker-compose down`
 
 If issues arise during the build process please share them with me and I will take a look at it.
