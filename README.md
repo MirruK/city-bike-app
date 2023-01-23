@@ -8,30 +8,39 @@ This project is for the Solita dev academy pre-assignment.
 ### DEPENDENCIES: 
 - docker
 - docker-compose
+-wget (if running shell script)
 - WSL (windows subsystem for linux) ONLY ON WINDOWS (might work without it but it is not tested)
-- The dataset files listed in step 1.1
+- The dataset files listed in step 1.1 (automatic dl if using shell script)
 
 ### Steps:
+<br>**ON LINUX:** 
+1. Clone repository
+2. `cd city-bike-app/backend`
+3. `chmod +x dockerdbinit.sh && ./dockerdbinit.sh`
+<br>Proceed to the "SERVING THE FRONTEND" section below
+
+<br>**ON WINDOWS:**
 1. Clone repository
     - Download datasets from https://github.com/solita/dev-academy-2023-exercise
             <br>The files you want are: https://dev.hsl.fi/citybikes/od-trips-2021/2021-05.csv
             <br> And: https://opendata.arcgis.com/datasets/726277c507ef4914b0aec3cbcfcbfafc_0.csv 
     - Copy the files into a directory called "dataset" placed at the root of the project. That is, "city-bike-app/dataset"
+    - Make sure the files are named exactly as follows:
+        - "2021-05.csv" and "Helsingin_ja_Espoon_kaupunkipyöräasemat.csv"
 
 After the files are correctly placed in the dataset directory, proceed to step 2.
 
-2. run command: `cd city-bike-app/backend`
-<br><br>**ON LINUX:** 
-3. run command: `chmod +x dockerdbinit.sh && ./dockerdbinit.sh`
-<br><br>**ON WINDOWS:**
-4. run command: `docker-compose up -d`
-<br>4.1. run command: `docker exec backend-db-1 psql -U postgres -d "city-bike-app" -a -f /create_tables.sql`
+2. `cd city-bike-app/backend`
+3. `docker-compose up -d`
+4. `docker exec backend-db-1 psql -U postgres -c 'CREATE DATABASE "city-bike-app";'`
+5. `docker exec backend-db-1 psql -U postgres -d "city-bike-app" -a -f /create_tables.sql`
 <br>The database should now be populated with data and running along with the backend server
 
-If you want to run the frontend in development mode:
-<br>5. run command: `cd ../frontend/city-bike-app`
-<br>6. run command: `npm install`
-<br>7. run command: `npm start`
+## SERVING THE FRONTEND
+#### This is the same on both linux and windows
+<br>1. `cd ../frontend/city-bike-app`
+<br>2. `npm install`
+<br>3. `npm start`
 
 **Congratulations!** The application should now be running on localhost:3000/
     
