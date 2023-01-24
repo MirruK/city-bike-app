@@ -8,7 +8,7 @@ This project is for the Solita dev academy pre-assignment.
 ### DEPENDENCIES: 
 - docker
 - docker-compose
--wget (if running shell script)
+- wget (if running shell script)
 - WSL (windows subsystem for linux) ONLY ON WINDOWS (might work without it but it is not tested)
 - The dataset files listed in step 1.1 (automatic dl if using shell script)
 
