@@ -17,7 +17,8 @@ This project is for the Solita dev academy pre-assignment.
 1. Clone repository
 2. `cd city-bike-app/backend`
 3. `chmod +x dockerdbinit.sh && ./dockerdbinit.sh`
-<br>Proceed to the "SERVING THE FRONTEND" section below
+<br>Congratulations, app should be available on localhost:3001/
+<br>(If you want to run the dev environment for the front end, proceed to the frontend section below
 
 <br>**ON WINDOWS:**
 1. Clone repository
@@ -36,7 +37,7 @@ After the files are correctly placed in the dataset directory, proceed to step 2
 5. `docker exec backend-db-1 psql -U postgres -d "city-bike-app" -a -f /create_tables.sql`
 <br>The database should now be populated with data and running along with the backend server
 
-## SERVING THE FRONTEND
+## If you want to run frontend in development mode:
 #### This is the same on both linux and windows
 <br>1. `cd ../frontend/city-bike-app`
 <br>2. `npm install`
@@ -57,3 +58,13 @@ __Application setup has been tested on:__
 <br>Run the command: `docker-compose down`
 
 If issues arise during the build process please share them with me and I will take a look at it.
+
+## API endpoints:
+
+/api/stations - Get all stations as JSON<br>
+/api/stations/:id - Get a station by its id<br>
+/api/stations/:id/journeys - Get journeys for a specific station<br>
+
+  Query parameters can be used to sort by different metrics, data can be ordered and whether the journey ends or begins at the given <br>
+  Example: localhost:3001/api/stations/10/journeys?sortBy=time&order=desc&rideType=returning&page=10<br>
+    This will return journeys for the station with id 10 where the journey ended at that station, sorted by total ride time, in ascending order. The endpoint only returns 50 entries at a time so page 10 here means you get entries 500-550
