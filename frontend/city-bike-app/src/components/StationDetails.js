@@ -8,9 +8,9 @@ const StationDetails = ({extended, station}) => {
             <h5>{station.namn}</h5>
         <div style={{display:"flex",width:"100%", alignContent:"center", justifyContent:"center"}}>
             <div style={{display: "flex", flexWrap:"wrap", width:"33%"}}>
-                <div style={{backgroundColor : "yellow", width : "50%"}}>{station.osoite}</div>
-                <div style={{backgroundColor : "red", width : "50%"}}>{station.adress}</div>
-                <div style={{backgroundColor : "blue", width : "100%"}}>{station.operaattor}</div>
+                <div style={{width : "50%"}}>{station.osoite}</div>
+                <div style={{width : "50%"}}>{station.adress}</div>
+                <div style={{width : "100%"}}>{station.operaattor}</div>
             </div>
         </div>
         </div>

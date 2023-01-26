@@ -1,6 +1,7 @@
 const express = require('express')
-const cors = require('cors');
-const { Pool, Client } = require('pg')
+const cors = require('cors')
+const path = require('path')
+const {Client} = require('pg')
 
 
 const PORT = process.env.PORT || 3001
@@ -13,55 +14,16 @@ const client = new Client({
     database: "city-bike-app"
 })
 
-//Get all this postgres working. Insert from dataset
-//Then get to working on frontend, using this inserted dataset
-// const postgresConnect = async() => {
-//     console.log("Attempting to connect to postgresql db")
-//     client.connect().then((val)=>console.log(val)).catch((err)=>console.log(err))
-// }
-//
-// const retryConnection = async()=>{
-//     let retries = 5
-//     while (retries) {
-//         try {
-//             console.log("Attempting connect")
-//             await postgresConnect()
-//             await new Promise(res => setTimeout(res, 3000))
-//             break
-//         } catch (error) {
-//             console.log(error)
-//             retries -= 1
-//             console.log("Retries left: ", retries)
-//             //wait
-//             await new Promise(res => setTimeout(res, 3000))
-//         }
-//     }
-//     process.exit(1);
-// }
-//
-// retryConnection()
 const app = express()
 
 app.use(cors())
+app.use(express.static(path.join(__dirname, 'build')))
 
 client.connect((err)=>{
     if(err) console.error('connection error', err.stack)
     else console.log("connected")
 })
 
-// Use logging middleware for errors
-// use morgan for pretty logging of requests
-
-app.get('/', (req, res)=>{
-    res.status(200)
-    res.send("Hi there")
-})
-
-// Get info about specific journey by id
-//app.get('api/journies/:id')
-
-
-// Get info about all stations (preload these)
 app.get('/api/stations', (req, res)=>{
     console.log("Hit stations endpoint")
     const queryRes = client.query("SELECT * FROM stations")
@@ -83,6 +45,7 @@ app.get('/api/stations/:id', (req, res)=>{
     }).catch((err)=>res.status(404).end())
 })
 
+// Get info about a station by its name (currently unused)
 app.get('/api/stations/:name', (req, res)=>{
     console.log("Hit stations/id endpoint")
     const queryRes = client.query(
@@ -138,6 +101,7 @@ app.get('/api/stations/:id/journeys', (req,res)=>{
             res.status(404).end()})
 })
 
+//TODO:
 // add a new journey 
 // database gives id & validate format of data
 //app.post('api/journies')

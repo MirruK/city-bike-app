@@ -6,6 +6,7 @@ wget https://opendata.arcgis.com/datasets/726277c507ef4914b0aec3cbcfcbfafc_0.csv
 
 docker-compose up -d
 docker exec backend-db-1 psql -U postgres -c 'CREATE DATABASE "city-bike-app";'
+sleep 2
 docker exec backend-db-1 psql -U postgres -d "city-bike-app" -a -f /create_tables.sql
 
 echo "Backend initialized, use docker-compose down to shut down containers"
